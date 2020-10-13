@@ -1,0 +1,39 @@
+---
+    - hosts: all
+      gather_facts: no
+      become: true
+      remote_user: ansible
+      vars:
+        basepath: /docker/remotely
+        repo: harbor.horten.kommune.no/remotely
+        image: remotely
+        tag: latest
+        router: remotely
+        url: remote.horten.kommune.no
+        network: traefik
+        port: 5000
+        
+      tasks:
+      - name: create directory
+        file:
+          path: "{{ basepath }}"
+          state: directory
+      
+      - name: copy files
+        template:
+          src: template/docker-compose.yml.j2
+          dest: "{{ basepath }}/docker-compose.yml"
+
+      - name: Log into private registry and force re-authorization
+        docker_login:
+          registry_url: harbor.horten.kommune.no
+          username: "{{ lookup('env', 'REGISTRY_USER') }}"
+          password: "{{ lookup('env', 'REGISTRY_PASSWORD') }}"
+          reauthorize: yes
+
+      - name: Create and start services
+        docker_compose:
+          project_src: "{{ basepath }}"
+          pull: yes
+          state: present
+        register: output

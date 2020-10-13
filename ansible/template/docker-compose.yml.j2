@@ -1,0 +1,23 @@
+version: '2'
+ 
+ services:
+   {{ image }}:
+     container_name: {{ image }}
+     image: {{ repo }}/{{ image }}:{{ tag }}
+     Volumes:
+      - ./Remotely.db:/remotely/Remotely.db
+      - ./appsettings.Production.json:/remotely/appsettings.Production.json
+     networks: 
+       - {{ network }}
+     labels:
+       - traefik.enable=true
+       - traefik.http.routers.{{ router }}.rule=Host(`{{ url }}`)
+       - traefik.http.routers.{{ router }}.entrypoints=websecure
+       - traefik.http.routers.{{ router }}.tls=true
+       - traefik.http.routers.{{ router }}.tls.certresolver=http
+       - traefik.http.routers.{{ router }}.middlewares=security-headers
+       - traefik.http.routers.{{ router }}.tls.options=default
+       - traefik.http.services.remotely.loadbalancer.server.port={{ port }}
+ networks:
+   {{ network }}:
+       external: true

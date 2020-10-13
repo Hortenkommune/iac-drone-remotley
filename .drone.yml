@@ -1,0 +1,63 @@
+---
+    kind: pipeline
+    type: docker
+    name: publish
+    steps:
+    - name: build and publish
+      image: plugins/docker
+      settings:
+        registry: harbor.horten.kommune.no
+        repo: harbor.horten.kommune.no/private/remotely
+        username:
+          from_secret: REGISTRY_USER
+        password:
+          from_secret: REGISTRY_PASSWORD
+        tags: 
+          - latest
+      when:
+        event:
+          - push
+    - name: teams-webhook
+      image: jdamata/drone-teams
+      settings:
+        webhook: 
+          from_secret: WEBHOOK
+      when: 
+        status: 
+          - success
+          - failure
+    trigger:
+      event:
+        - push
+    ---
+    kind: pipeline
+    type: docker
+    name: deploy
+    steps:
+    - name: prepare inventory
+      image: alpine:latest
+      environment:
+        HOST:
+          from_secret: HOST
+      commands:
+        - echo $HOST >> ansible/inventory
+    - name: apply ansible playbook
+      image: plugins/ansible
+      settings:
+        playbook: ansible/playbook.yml
+        inventory: ansible/inventory
+        requirements: ansible/requirements.txt
+        private_key:
+          from_secret: SSH_PRIVATE_KEY
+        extra_vars:
+          from_secret: ANSIBLE_EXTRA_VARS
+      environment:
+        REGISTRY_USER:
+          from_secret: REGISTRY_USER
+        REGISTRY_PASSWORD:
+          from_secret: REGISTRY_PASSWORD
+    depends_on:
+      - publish
+    trigger:
+      event:
+        - push
