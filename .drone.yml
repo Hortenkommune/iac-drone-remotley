@@ -40,7 +40,7 @@ steps:
     HOST:
       from_secret: HOST
   commands:
-    - echo $HOST >> ansible/inventory
+    - printf "$HOST\n" >> ansible/inventory
 - name: apply ansible playbook
   image: plugins/ansible
   settings:
@@ -61,4 +61,3 @@ depends_on:
 trigger:
   event:
     - push
-    
