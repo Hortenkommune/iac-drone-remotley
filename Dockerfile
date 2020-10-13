@@ -10,7 +10,6 @@ RUN \
     rm Remotely_Server_Linux-x64.zip && \
     rm -r wwwroot/Downloads/*
 
-
 RUN chmod u+x,o+x .
 
 FROM mcr.microsoft.com/dotnet/core/aspnet:3.1
