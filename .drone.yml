@@ -40,7 +40,7 @@ steps:
     HOST:
       from_secret: HOST
   commands:
-    - printf $HOST >> ansible/inventory
+    - printf '\n'$HOST >> ansible/inventory
 - name: apply ansible playbook
   image: plugins/ansible
   settings:
