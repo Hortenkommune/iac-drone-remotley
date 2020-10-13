@@ -4,7 +4,7 @@ services:
   {{ image }}:
     container_name: {{ image }}
     image: {{ repo }}/{{ image }}:{{ tag }}
-    Volumes:
+    volumes:
      - ./Remotely.db:/remotely/Remotely.db
      - ./appsettings.Production.json:/remotely/appsettings.Production.json
     networks: 
