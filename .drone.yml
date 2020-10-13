@@ -61,3 +61,4 @@ depends_on:
 trigger:
   event:
     - push
+    
