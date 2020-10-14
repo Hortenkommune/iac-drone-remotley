@@ -5,7 +5,7 @@
       remote_user: ansible
       vars:
         basepath: /docker/remotely
-        repo: harbor.horten.kommune.no/remotely
+        repo: harbor.horten.kommune.no
         image: remotely
         tag: latest
         router: remotely
