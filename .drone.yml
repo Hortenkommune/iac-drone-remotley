@@ -7,7 +7,7 @@ steps:
   image: plugins/docker
   settings:
     registry: harbor.horten.kommune.no
-    repo: harbor.horten.kommune.no/private/remotley
+    repo: harbor.horten.kommune.no/private/remotely
     username:
       from_secret: REGISTRY_USER
     password:
