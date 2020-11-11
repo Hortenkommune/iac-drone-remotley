@@ -7,8 +7,7 @@ RUN \
     apk --update --no-cache add openssl wget unzip && \
     wget -q https://github.com/lucent-sea/Remotely/releases/latest/download/Remotely_Server_Linux-x64.zip && \
     unzip -o Remotely_Server_Linux-x64.zip && \
-    rm Remotely_Server_Linux-x64.zip && \
-    rm -r wwwroot/Downloads/*
+    rm Remotely_Server_Linux-x64.zip
 
 RUN chmod u+x,o+x .
 
